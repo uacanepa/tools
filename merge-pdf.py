@@ -7,17 +7,18 @@ from glob import glob
 FORCE_PIP_INSTALL = False
 
 try:
-    from pypdf import PdfWriter
+    from pypdf import PdfWriter # https://github.com/py-pdf/pypdf
 except ModuleNotFoundError:
     if FORCE_PIP_INSTALL:
         run(["pip", "install", "pypdf"])
-        from pypdf import PdfWriter
+    from pypdf import PdfWriter
+
 
 SCRIPT_ROOT = abspath(dirname(__file__))
 MERGE_FILE = basename(SCRIPT_ROOT)+"-docs.pdf"
 
 if __name__ == "__main__":
-    print("\n## Merge PDF Docs ##\n")
+    print("\nMerging PDF Docs:\n")
     with PdfWriter() as merger:
         for pdf in glob(f"{SCRIPT_ROOT}/**/*.pdf", recursive=True):
             if MERGE_FILE not in pdf:
