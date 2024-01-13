@@ -1,18 +1,14 @@
 """ merge nested pdfs at script root """
 
-from os.path import dirname,abspath,basename,join
+from os.path import dirname,abspath,getmtime,basename,join
 from subprocess import run
 from glob import glob
-
-FORCE_PIP_INSTALL = False
 
 try:
     from pypdf import PdfWriter # https://github.com/py-pdf/pypdf
 except ModuleNotFoundError:
-    if FORCE_PIP_INSTALL:
-        run(["pip", "install", "pypdf"])
+    run(["pip", "install", "pypdf"], check=True, shell=False)
     from pypdf import PdfWriter
-
 
 SCRIPT_ROOT = abspath(dirname(__file__))
 MERGE_FILE = basename(SCRIPT_ROOT)+"-docs.pdf"
@@ -20,7 +16,7 @@ MERGE_FILE = basename(SCRIPT_ROOT)+"-docs.pdf"
 if __name__ == "__main__":
     print("\nMerging PDF Docs:\n")
     with PdfWriter() as merger:
-        for pdf in glob(f"{SCRIPT_ROOT}/**/*.pdf", recursive=True):
+        for pdf in sorted(glob(f"{SCRIPT_ROOT}/**/*.pdf", recursive=True), key=getmtime, reverse=True):
             if MERGE_FILE not in pdf:
                 print("[+] ", pdf)
                 merger.append(pdf)
