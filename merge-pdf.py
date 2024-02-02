@@ -16,7 +16,7 @@ MERGE_FILE = basename(SCRIPT_ROOT)+"-docs.pdf"
 if __name__ == "__main__":
     print("\nMerging PDF Docs:\n")
     with PdfWriter() as merger:
-        for pdf in sorted(glob(f"{SCRIPT_ROOT}/**/*.pdf", recursive=True), key=getmtime, reverse=True):
+        for pdf in sorted(glob(f"{SCRIPT_ROOT}/**/*.pdf", recursive=True), key=getmtime, reverse=False):
             if MERGE_FILE not in pdf:
                 print("[+] ", pdf)
                 merger.append(pdf)
